@@ -1,5 +1,5 @@
 "use client"
-
+// icons from https://fontawesome.com/search
 import { useState } from "react";
 import "./style.css"
 import { FaSearch } from "react-icons/fa";
@@ -32,11 +32,7 @@ const Navbar = () => {
                 </div>
                 </div>
             </nav>
-            <h1 className="text-white text-center mt-8">Please, log in to start listening</h1>
-            
-
-
-
+            <h1 className="text-white text-center mt-8">Please, log in to start listening</h1>      
         
         </>
     )
