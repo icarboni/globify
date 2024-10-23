@@ -11,6 +11,8 @@ import UserMenu from "./UserMenu";
 
 const Navbar = () => {
 
+  let isLogged = getUserLogged();
+
   function handleSignIn() {
     const url = getAutenticationURL();
     window.location.href  = url;
@@ -20,6 +22,7 @@ const Navbar = () => {
         const accessToken = params.get('access_token');
         if (accessToken) {
           localStorage.setItem("accessToken", accessToken);
+          isLogged = true;
         }
         window.location.href = "http://localhost:3000";
     }
@@ -64,7 +67,7 @@ const Navbar = () => {
                 />
               )}
             </div>
-            { getUserLogged() ? 
+            { !isLogged ? 
               <div className="flex items-center" id="authButtons">
               <button className="btn text-white font-bold" id="signupBtn">
                 Sign up
