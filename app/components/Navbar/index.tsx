@@ -1,17 +1,19 @@
 "use client"
 // icons from https://fontawesome.com/search
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./style.css"
 import { FaSearch } from "react-icons/fa";
 import { IoIosFolderOpen } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
-import { getAutenticationURL, getUserLogged } from "@/app/login";
+import { getAutenticationURL } from "@/app/login";
 import Image from "next/image";
 import UserMenu from "./UserMenu";
 
 const Navbar = () => {
 
-  let isLogged = getUserLogged();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+
 
   function handleSignIn() {
     const url = getAutenticationURL();
@@ -22,13 +24,13 @@ const Navbar = () => {
         const accessToken = params.get('access_token');
         if (accessToken) {
           localStorage.setItem("accessToken", accessToken);
-          isLogged = true;
         }
         window.location.href = "http://localhost:3000";
     }
   }
-
-
+  useEffect(() => {
+    setIsAuthenticated(localStorage.getItem("accessToken") !== null)
+  }, []);
     const [ searchText, setSearchText ] = useState<string>("");
 
     return (
@@ -49,7 +51,7 @@ const Navbar = () => {
               <FaSearch className="ms-2" />
               <input
                 id="search-form"
-                className="me-2 bg-gray-700 text-white rounded-full px-4 py-2"
+                className="me-2 bg-gray-700 text-white rounded-full px-4 py-2 focus: outline-none"
                 type="text"
                 placeholder="Search"
                 aria-label="Search"
@@ -91,7 +93,7 @@ const Navbar = () => {
                 />
               </svg>
             </button>
-            {!isLogged ? (
+            {!isAuthenticated ? (
               <div
                 className="hidden w-full md:block md:w-auto"
                 id="authButtons"
@@ -102,6 +104,7 @@ const Navbar = () => {
                 <button
                   className="btn me-2 font-bold text-gray-900"
                   id="loginBtn"
+                  onClick={handleSignIn}
                 >
                   Log in
                 </button>
