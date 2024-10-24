@@ -2,28 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { getArtistDetails, getPlaylists, getTopArtists, getUserInfo } from "./hooks";
+import getToken from "../utils/token";
+import TopArtists from "../components/TopArtists";
 
 const UserProfile: React.FC = () => {
   const [selectedPlaylistId, setSelectedPlalistId] = useState<string>(); // ID de la playlist
-  const [topArtists, setTopArtists] = useState<any[]>([]); // Estado para los top artistas
-  const [user, setUser] = useState<any>(null); // Estado para la información del usuario
-  const [error, setError] = useState<string | null>(null); // Estado para el manejo de errores
+  const [user, setUser] = useState<any>(null); // Estado para la información del usuario // Estado para el manejo de errores
   const [playlists, setPlaylists] = useState<any[]>([]);
   
 
   // Efecto para cargar la información del usuario y los top artistas cuando se monta el componente
   useEffect(() => {
-    console.log("Fetching data...");
     async function fetchData() {
-      const token = localStorage.getItem("accessToken");
+      const { token } = getToken(); // Obtener el token de acceso
       if (!token) {
         return;
       }
-      if (token) {
-        console.log(token);
-      }
       try {
-        console.log("Fetching user info...");
         const userInfo = await getUserInfo(token!); // Obtener la información del usuario
         if (userInfo) {
           setUser(userInfo);
@@ -31,29 +26,14 @@ const UserProfile: React.FC = () => {
           throw new Error("No se pudo obtener la información del usuario.");
         }
 
-        const artists = await getTopArtists(token); // Obtener los top artistas
-
-        // Obtener detalles de cada artista (incluyendo seguidores)
-        const artistsWithDetails = await Promise.all(artists.map(async (artist: any) => {
-          const artistDetails = await getArtistDetails(token, artist.id);
-          return {
-            ...artist,
-            followers: artistDetails.followers.total,
-          };
-        }));
-        setTopArtists(artistsWithDetails);
-
         const playlists = await getPlaylists(token!);
         setPlaylists(playlists);
-        console.log(playlists);
         setSelectedPlalistId(playlists[1].id);
 
-      } catch (error) {
-        const errorMessage =
-          (error as Error).message ||
-          "Error desconocido al obtener datos de la API de Spotify";
-        console.error("Error fetching data from Spotify API:", errorMessage);
-        setError(errorMessage); // Asignar el mensaje de error a estado
+      } catch (error) {;
+        throw new Error(
+          "Error al obtener datos de la API de Spotify"
+        );
       }
     }
     fetchData();
@@ -111,39 +91,7 @@ const UserProfile: React.FC = () => {
           )}
         </div>
 
-        {/* Sección de Top Artists */}
-        <div className="bg-slate-600 p-6">
-          <h2 className="text-xl font-bold mb-4">Mis Top Artistas del Mes</h2>
-          {error ? (
-            <p className="text-red-500">Error: {error}</p>
-          ) : (
-            <div className="flex">
-              {topArtists.length > 0 ? (
-                topArtists.map((artist) => (
-                  <div key={artist.id} className="text-center flex flex-col grow items-center">
-                    {artist.images[0] ? (
-                      <img
-                        src={artist.images[0]?.url}
-                        alt={artist.name}
-                        className="w-20 h-20 rounded-full mb-2"
-                      />
-                    ) : (
-                      <div className="w-20 h-20 rounded-full bg-gray-700 mr-6 flex justify-center items-center text-7xl">
-                        {artist.name.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                    <p className="text-sm">{artist.name}</p>
-                    <p className="text-xs text-gray-400">
-                      {artist.followers} Seguidores
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p>No se encontraron artistas o están cargando...</p>
-              )}
-            </div>
-          )}
-        </div>
+        <TopArtists />
 
         {/* Sección de Playlist embebida */}
         {playlists ? (

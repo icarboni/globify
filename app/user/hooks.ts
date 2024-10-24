@@ -5,7 +5,6 @@ async function fetchWebApi(
   body?: unknown
 ) {
   try {
-    console.log("token", token);
     const res = await fetch(`https://api.spotify.com/${endpoint}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -22,7 +21,6 @@ async function fetchWebApi(
       );
     }
     const data = await res.json();
-    console.log("data", data);
     return { data, error: null };
   } catch (error) {
     console.error("Error fetching data from Spotify API:", error);

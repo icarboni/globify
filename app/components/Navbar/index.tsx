@@ -5,21 +5,19 @@ import "./style.css"
 import { FaSearch } from "react-icons/fa";
 import { IoIosFolderOpen } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
-import { getAutenticationURL } from "@/app/login";
+import { getAutenticationURL } from "@/app/utils/login";
 import Image from "next/image";
 import UserMenu from "./UserMenu";
+import getToken from "@/app/utils/token";
 
 const Navbar = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
   
   useEffect(() => {
     const getAccessToken = async () => {
-      setAccessToken(localStorage.getItem("accessToken"))
-      if (accessToken) {
-        setIsAuthenticated(true);
-      }
+      const { isAuthenticated } = getToken();
+      setIsAuthenticated(isAuthenticated)
     }
     getAccessToken();
   })
@@ -43,6 +41,7 @@ const Navbar = () => {
               className="w-8 h-8 mr-3"
               width={32}
               height={32}
+              onClick={() => { window.location.href = "/" }}
             />
             <div
               id="search-container"
