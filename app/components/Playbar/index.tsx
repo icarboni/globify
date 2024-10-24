@@ -4,21 +4,30 @@ import { FaRepeat, FaShuffle, } from 'react-icons/fa6'
 import { TbMicrophone2 } from "react-icons/tb";
 import { HiOutlineQueueList } from "react-icons/hi2";
 import { FiMaximize2 } from "react-icons/fi";
+import "./style.css"
 
 const Playbar = () => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white">
-      <div className="container mx-auto flex items-center justify-between p-4">
+    <div className="fixed bottom-0 bg-gray-900 text-white w-full">
+      <div className="mx-auto flex p-4">
         {/* Song info */}
         <div className="flex items-center w-1/4">
           <img
-            src="photo"
+            src="https://i.scdn.co/image/ab67616d0000b2738ecc33f195df6aa257c39eaa"
             alt="Album cover"
-            className="w-14 h-14 mr-4"
+            className="w-14 h-14 mr-4 flex-shrink-0"
           />
-          <div className="flex flex-col">
-            <h2 className="font-bold text-sm">Florida!!</h2>
-            <p className="text-xs text-gray-400">Taylor Swift</p>
+          <div className="flex flex-col overflow-hidden">
+            <div className="font-bold text-sm whitespace-nowrap overflow-hidden" style={{ maxWidth: '200px' }}>
+              <div className="scrolling-text">
+                Florida!! (feat Florence + the Machine)
+              </div>
+            </div>
+            <div className="text-xs text-gray-400 whitespace-nowrap overflow-hidden" style={{ maxWidth: '200px' }}>
+              <div className="scrolling-text">
+                Taylor Swift, Florence and The Machine
+              </div>
+            </div>
           </div>
         </div>
 
