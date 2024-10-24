@@ -79,7 +79,7 @@ const UserProfile: React.FC = () => {
         {/* Sección de Top Artists */}
         <div className="bg-gray-700 p-6">
           <h2 className="text-xl font-bold mb-4">Mis Top Artistas del Mes</h2>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 w-full">
             {topArtists.length > 0 ? (
               topArtists.map((artist) => (
                 <div key={artist.id} className="text-center">
