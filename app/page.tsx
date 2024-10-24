@@ -5,14 +5,19 @@ import getToken from "./utils/token";
 import { getUserInfo } from "./user/hooks";
 import TopArtists from "./components/TopArtists";
 import Login from "./components/Login";
+import SearchResults from "./components/SearchResults";
+import { useSearch } from "./layout";
 
 export default function Home() {
+
+  const { searchText, setSearchText } = useSearch();
 
   const [token, setToken] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     const getUserData = async () => {
@@ -51,15 +56,22 @@ export default function Home() {
         <>
           {!isAuthenticated ? (
             <Login />
-          ) : (
-            <div className="p-4 w-[80%]">
-              <div className="text-2xl mb-2">
-                {" "}
-                Welcome {user?.display_name}!{" "}
-              </div>
-              <TopArtists />
-            </div>
-          )}
+          ) : ( 
+            <>
+              {
+              searchText === "" ? (
+                <div className="p-4 w-[80%]">
+                  <div className="text-2xl mb-2">
+                    Welcome {user?.display_name}!{" "}
+                  </div>
+                  <TopArtists />
+                </div>
+              ) : (
+                <SearchResults searchText={searchText} />
+              )}
+            </>
+            )
+            }
         </>
       )}
     </div>
