@@ -28,11 +28,3 @@ export function getAutenticationURL() {
 
     return url;
 }
-
-export function getUserLogged() {
-  const accessToken = localStorage.getItem("accessToken");
-  if (accessToken) {
-    return true;
-  }
-  return false;
-}

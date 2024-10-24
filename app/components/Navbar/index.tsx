@@ -1,17 +1,18 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./style.css"
 import { FaSearch } from "react-icons/fa";
 import { IoIosFolderOpen } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
-import { getAutenticationURL, getUserLogged } from "@/app/login";
+import { getAutenticationURL} from "@/app/login";
 import Image from "next/image";
 import UserMenu from "./UserMenu";
 
 const Navbar = () => {
 
-  let isLogged = getUserLogged();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
 
   function handleSignIn() {
     const url = getAutenticationURL();
@@ -22,11 +23,14 @@ const Navbar = () => {
         const accessToken = params.get('access_token');
         if (accessToken) {
           localStorage.setItem("accessToken", accessToken);
-          isLogged = true;
         }
         window.location.href = "http://localhost:3000";
     }
   }
+
+  useEffect(() => {
+    setIsAuthenticated(localStorage.getItem("accessToken") !== null)
+  }, [])
 
 
     const [ searchText, setSearchText ] = useState<string>("");
@@ -67,20 +71,20 @@ const Navbar = () => {
                 />
               )}
             </div>
-            { !isLogged ? 
+            { !isAuthenticated ? 
               <div className="flex items-center" id="authButtons">
-              <button className="btn text-white font-bold" id="signupBtn">
-                Sign up
-              </button>
-              <button
-                className="btn me-2 font-bold text-gray-900"
-                id="loginBtn"
-                onClick={handleSignIn}
-              >
-                Log in
-              </button>
-            </div> : 
-            <UserMenu />
+                <button className="btn text-white font-bold" id="signupBtn">
+                  Sign up
+                </button>
+                <button
+                  className="btn me-2 font-bold text-gray-900"
+                  id="loginBtn"
+                  onClick={handleSignIn}
+                >
+                  Log in
+                </button>
+              </div> : 
+              <UserMenu />
           }
           </div>
         </nav>
