@@ -7,14 +7,19 @@ const UserMenu = () => {
   }
 
   return (
-    <div className="user-menu flex items-center">
-      <button className="btn text-white font-bold mr-3" id="signupBtn" onClick={handleSignOut}>
-        Log out
-      </button>
-      <div
-        className="bg-red-300"
-        style={{ width: "35px", height: "35px", borderRadius: "50px" }}
-      >
+    <div className="user-menu flex items-center hidden md:block">
+      <div className="flex">
+        <button
+        className="btn text-white font-bold mr-3"
+        id="signupBtn"
+        onClick={handleSignOut}
+        >
+          Log out
+        </button>
+        <div
+          className="bg-red-300"
+          style={{ width: "35px", height: "35px", borderRadius: "50px" }}
+        ></div>
       </div>
     </div>
   );
