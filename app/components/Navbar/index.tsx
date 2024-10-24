@@ -27,15 +27,6 @@ const Navbar = () => {
   function handleSignIn() {
     const url = getAutenticationURL();
     window.location.href  = url;
-    const hash = window.location.hash;
-      if (hash) {
-        const params = new URLSearchParams(hash.substring(1));
-        const accessToken = params.get('access_token');
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-        }
-        window.location.href = "http://localhost:3000";
-    }
   }
   useEffect(() => {
     setIsAuthenticated(localStorage.getItem("accessToken") !== null)
@@ -44,7 +35,7 @@ const Navbar = () => {
 
     return (
       <>
-        <nav className="bg-gray-900 p-4">
+        <nav className="bg-gray-900 p-4 sticky top-0">
           <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
             <Image
               src="/logo.png"

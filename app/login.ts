@@ -11,7 +11,7 @@ function generateRandomString(length: number): string {
 
 export function getAutenticationURL() {
     const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID as string;
-    const redirect_uri = "http://localhost:3000";
+    const redirect_uri = "http://localhost:3000/callback";
 
     const state = generateRandomString(16);
 

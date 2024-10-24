@@ -1,18 +1,19 @@
 const UserMenu = () => {
-
   function handleSignOut() {
     console.log("Signing out");
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("stateKey");  
+    localStorage.removeItem("stateKey");
+
+    window.location.href = "http://localhost:3000";
   }
 
   return (
-    <div className="user-menu flex items-center hidden md:block">
+    <div className="user-menu items-center hidden md:flex">
       <div className="flex">
         <button
-        className="btn text-white font-bold mr-3"
-        id="signupBtn"
-        onClick={handleSignOut}
+          className="btn text-white font-bold mr-3"
+          id="signupBtn"
+          onClick={handleSignOut}
         >
           Log out
         </button>
@@ -23,6 +24,6 @@ const UserMenu = () => {
       </div>
     </div>
   );
-}
+};
 
-export default UserMenu
+export default UserMenu;
