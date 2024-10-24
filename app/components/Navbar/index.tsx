@@ -34,7 +34,7 @@ const Navbar = () => {
     return (
       <>
         <nav className="bg-gray-900 p-4">
-          <div className="container mx-auto flex items-center justify-between">
+          <div className="mx-auto flex items-center justify-between">
             <Image
               src="/logo.png"
               alt="spotifylogo"
