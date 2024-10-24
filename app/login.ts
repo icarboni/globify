@@ -16,7 +16,8 @@ export function getAutenticationURL() {
     const state = generateRandomString(16);
 
     localStorage.setItem("stateKey", state);
-    const scope = "user-read-private user-read-email";
+    const scope =
+      "user-read-private user-read-email user-top-read user-library-read playlist-read-private";
 
     let url = "https://accounts.spotify.com/authorize";
     url += "?response_type=token";

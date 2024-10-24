@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 
 const UserProfile: React.FC = () => {
-  const [playlistId] = useState<string>('64zWmHwvt0uOrd4M1j6WFi'); // ID de la playlist
+  const [selectedPlaylistId, setSelectedPlalistId] = useState<string>(); // ID de la playlist
   const [topArtists, setTopArtists] = useState<any[]>([]); // Estado para los top artistas
   const [user, setUser] = useState<any>(null); // Estado para la información del usuario
   const [error, setError] = useState<string | null>(null); // Estado para el manejo de errores
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [token, setToken] = useState<string | null>(null);
+  const [playlists, setPlaylists] = useState<any[]>([]);
 
-  // Token de autorización hardcodeado
-  const token = 'BQBgAK2pxuOUP7gtZJOPPvC2gcOue5LSt-dNrUvLyFXkAKm1UBIyBEXjk7rOvl_kIY88YbRc6KixdaKkWUglOvzRDogKNE4U1ssdwrO-WPrlmNLOTP8Pb2Q25T63GBmVUkTyQjLH08nt4izHu68POE6ZcTr2f8WzHDZ7JYF4h_NBN-KNaptjLw1UuLOVhlwFQvadx62G5xWWXshaIbaheXj-USu4Igur4HWqkGqher_hoTl2-w-ZaDKuZ4gatwrLcWzcRe2aHQ';
 
   // Función para llamar a la API de Spotify
   async function fetchWebApi(endpoint: string, method: string, body?: any) {
@@ -53,33 +54,46 @@ const UserProfile: React.FC = () => {
     return data;
   }
 
+  async function getPlaylists() {
+    const data = await fetchWebApi('v1/me/playlists?offset=0&limit=', "GET");
+    return data?.items || [];
+  }
+
   // Efecto para cargar la información del usuario y los top artistas cuando se monta el componente
   useEffect(() => {
     async function fetchData() {
+			setToken(localStorage.getItem("accessToken"));
+			console.log(token)
+			if (token) {
+				console.log(token)
+				setIsAuthenticated(true);
+			}
       try {
         console.log('Fetching user info...');
         const userInfo = await getUserInfo(); // Obtener la información del usuario
         if (userInfo) {
-          console.log('User info fetched:', userInfo);
           setUser(userInfo);
         } else {
           throw new Error('No se pudo obtener la información del usuario.');
         }
 
-        console.log('Fetching top artists...');
-        const artists = await getTopArtists(); // Obtener los top artistas
+        // const artists = await getTopArtists(); // Obtener los top artistas
 
-        // Obtener detalles de cada artista (incluyendo seguidores)
-        const artistsWithDetails = await Promise.all(artists.map(async (artist) => {
-          const artistDetails = await getArtistDetails(artist.id);
-          return {
-            ...artist,
-            followers: artistDetails.followers.total,
-          };
-        }));
+        // // Obtener detalles de cada artista (incluyendo seguidores)
+        // const artistsWithDetails = await Promise.all(artists.map(async (artist: any) => {
+        //   const artistDetails = await getArtistDetails(artist.id);
+        //   return {
+        //     ...artist,
+        //     followers: artistDetails.followers.total,
+        //   };
+        // }));
+        //setTopArtists(artistsWithDetails);
 
-        console.log('Top artists fetched:', artistsWithDetails);
-        setTopArtists(artistsWithDetails);
+        const playlists = await getPlaylists();
+        setPlaylists(playlists);
+        console.log(playlists);
+        setSelectedPlalistId(playlists[0].id);
+
       } catch (error) {
         const errorMessage =
           (error as Error).message || 'Error desconocido al obtener datos de la API de Spotify';
@@ -88,36 +102,51 @@ const UserProfile: React.FC = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [token]);
 
   return (
     <div className="bg-gray-900 min-h-screen text-white p-8">
       <div className="flex flex-col max-w-4xl mx-auto">
-
         {/* Sección de información del usuario */}
         <div className="bg-gray-800 p-6 flex flex-row items-center rounded-t-lg">
           {user ? (
             <>
-              <img
-                className="w-32 h-32 rounded-full mr-6"
-                src={user.images[0]?.url || 'https://randomuser.me/api/portraits/men/32.jpg'}
-                alt={`${user.display_name}'s profile`}
-              />
-              
+              {user.images[0]?.url ? (
+                <img
+                  className="w-32 h-32 rounded-full mr-6"
+                  src={user.images[0]?.url}
+                  alt={`${user.display_name}'s profile`}
+                />
+              ) : (
+                <div className="w-32 h-32 rounded-full bg-gray-700 mr-6 flex justify-center items-center text-7xl">
+                  {user.display_name.charAt(0).toUpperCase()}
+                </div>
+              )}
+
               <div>
                 <h1 className="text-2xl font-bold mb-2">{user.display_name}</h1>
                 <div className="flex flex-row space-x-6 text-sm">
                   <div>
-                    <span className="font-bold">{user.followers?.total || 0}</span> Seguidores
+                    <span className="font-bold">
+                      {user.followers?.total || 0}
+                    </span>{" "}
+                    Seguidores
                   </div>
                   <div>
-                    <span className="font-bold">{user.product}</span> Tipo de cuenta
+                    <span className="font-bold">{user.product}</span> Tipo de
+                    cuenta
                   </div>
                   <div>
-                    <span className="font-bold">{user.external_urls?.spotify ? '1' : '0'}</span> Playlists públicas
+                    <span className="font-bold">
+                      {user.external_urls?.spotify ? "1" : "0"}
+                    </span>{" "}
+                    Playlists públicas
                   </div>
                   <div>
-                    <span className="font-bold">{user.following?.total || 0}</span> Siguiendo
+                    <span className="font-bold">
+                      {user.following?.total || 0}
+                    </span>{" "}
+                    Siguiendo
                   </div>
                 </div>
               </div>
@@ -128,7 +157,7 @@ const UserProfile: React.FC = () => {
         </div>
 
         {/* Sección de Top Artists */}
-        <div className="bg-gray-700 p-6">
+        {/* <div className="bg-gray-700 p-6">
           <h2 className="text-xl font-bold mb-4">Mis Top Artistas del Mes</h2>
           {error ? (
             <p className="text-red-500">Error: {error}</p>
@@ -138,12 +167,17 @@ const UserProfile: React.FC = () => {
                 topArtists.map((artist) => (
                   <div key={artist.id} className="text-center">
                     <img
-                      src={artist.images[0]?.url || 'https://via.placeholder.com/150'}
+                      src={
+                        artist.images[0]?.url ||
+                        "https://via.placeholder.com/150"
+                      }
                       alt={artist.name}
                       className="w-20 h-20 rounded-full mb-2"
                     />
                     <p className="text-sm">{artist.name}</p>
-                    <p className="text-xs text-gray-400">{artist.followers} Seguidores</p>
+                    <p className="text-xs text-gray-400">
+                      {artist.followers} Seguidores
+                    </p>
                   </div>
                 ))
               ) : (
@@ -151,14 +185,37 @@ const UserProfile: React.FC = () => {
               )}
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Sección de Playlist embebida */}
-        <div className="bg-gray-700 p-6 rounded-b-lg">
+        <div className="bg- p-6 rounded-b-lg">
           <h2 className="text-xl font-bold mb-4">Mi Playlist Recomendada</h2>
+
+          <div className="flex mt-3 mb-4 wrap">
+            {playlists.splice(0, 5).map((playlist) => (
+              <div
+                key={playlist.id}
+                className={`m-2 grow flex space-between items-center p-3 rounded-lg hover:bg-slate-600 cursor-pointer ${
+    selectedPlaylistId === playlist.id ? 'bg-blue-500' : ''}`}
+
+                onClick={() => setSelectedPlalistId(playlist.id)}
+              >
+                {playlist.images ? (
+                  <img
+                    src={playlist.images[0].url}
+                    alt={"img"}
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-red-400"></div>
+                )}
+                <p className="text-xs ml-2">{playlist.name}</p>
+              </div>
+            ))}
+          </div>
           <iframe
             title="Spotify Embed: Recommendation Playlist"
-            src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
+            src={`https://open.spotify.com/embed/playlist/${selectedPlaylistId}?utm_source=generator&theme=0`}
             width="100%"
             height="360px"
             frameBorder="0"
