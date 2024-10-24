@@ -40,8 +40,8 @@ const Playbar = () => {
             <button aria-label="Previous" className="text-gray-400 hover:text-white">
               <IoIosSkipBackward className="w-5 h-5" />
             </button>
-            <button aria-label="Play/Pause" className="bg-white text-black rounded-full p-2 hover:scale-105 transition">
-              <FaPlayCircle className="w-6 h-6" />
+            <button aria-label="Play/Pause" className="hover:scale-105 transition">
+              <FaPlayCircle className="w-9 h-9" />
             </button>
             <button aria-label="Next" className="text-gray-400 hover:text-white">
               <IoIosSkipForward className="w-5 h-5" />
@@ -51,7 +51,7 @@ const Playbar = () => {
             </button>
           </div>
           <div className="w-full flex items-center">
-            <span className="text-xs text-gray-400 w-10">0:00</span>
+            <span className="text-xs text-gray-400 w-10">1:10</span>
             <div className="flex-grow mx-2 h-1 bg-gray-700 rounded-full">
               <div className="w-1/3 h-full bg-white rounded-full"></div>
             </div>
