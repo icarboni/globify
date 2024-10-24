@@ -12,8 +12,17 @@ import UserMenu from "./UserMenu";
 const Navbar = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const getAccessToken = async () => {
+      setAccessToken(localStorage.getItem("accessToken"))
+      if (accessToken) {
+        setIsAuthenticated(true);
+      }
+    }
+    getAccessToken();
+  })
 
   function handleSignIn() {
     const url = getAutenticationURL();
@@ -86,9 +95,9 @@ const Navbar = () => {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M1 1h15M1 7h15M1 13h15"
                 />
               </svg>
