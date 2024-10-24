@@ -102,6 +102,7 @@ const Navbar = () => {
                 <button
                   className="btn me-2 font-bold text-gray-900"
                   id="loginBtn"
+                  onClick={handleSignIn}
                 >
                   Log in
                 </button>
