@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import getToken from "./utils/token";
 import { getUserInfo } from "./user/hooks";
 import TopArtists from "./components/TopArtists";
+import Login from "./components/Login";
 
 export default function Home() {
 
@@ -11,14 +12,19 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getUserData = async () => {
+      setIsLoading(true);
       const { token, isAuthenticated } = getToken();
       setIsAuthenticated(isAuthenticated);
-      if (!token)
+      if (!token) {
+        setIsLoading(false);
         return
+      }
       setToken(token);
+      
       try {
         const userInfo = await getUserInfo(token!); 
         if (userInfo) {
@@ -26,6 +32,7 @@ export default function Home() {
         } else {
           throw new Error("No se pudo obtener la información del usuario.");
         }
+        setIsLoading(false);
       } catch (error) {
         const errorMessage =
           (error as Error).message ||
@@ -37,15 +44,24 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
-      {
-        !isAuthenticated ? 
-        "Plese login" : 
-        <div className="p-8"> 
-          <div className="text-2xl mb-2"> Welcome {user?.display_name}! </div>
-          <TopArtists />
-        </div>
-      }
+    <div className="flex flex-col items-center justify-center py-2">
+      {isLoading ? (
+        "Loading..."
+      ) : (
+        <>
+          {!isAuthenticated ? (
+            <Login />
+          ) : (
+            <div className="p-4 w-[80%]">
+              <div className="text-2xl mb-2">
+                {" "}
+                Welcome {user?.display_name}!{" "}
+              </div>
+              <TopArtists />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
