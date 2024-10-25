@@ -28,6 +28,7 @@ const SearchResults = ({searchText}: SearchResultsProps) => {
               }
             } catch (error) {
               throw new Error("Error al obtener datos de la API de Spotify");
+              console.error(error);
             }
         }
         getResults()
@@ -35,12 +36,17 @@ const SearchResults = ({searchText}: SearchResultsProps) => {
 
     return (
         <div>
-            {result.map((item: any) => (
+          
+            {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              result.map((item: any) => (
                 <div key={item.id} className="flex flex-col m-3 bg-slate-800 p-3 rounded-lg w-[500px]">
                     <div className="text-xl">
                         { item.name }
-                    </div>  
-                    <div className="text-sm">{item.artists.map((artist: any) => artist.name).join(", ")}</div>
+                    </div> 
+                    <div className="text-sm">{
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      item.artists.map((artist: any) => artist.name).join(", ")}</div>
                 </div>
             ))}
         </div>

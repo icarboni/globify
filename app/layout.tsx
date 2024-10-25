@@ -1,6 +1,5 @@
 "use client"
 
-import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./components/Navbar";
@@ -21,6 +20,7 @@ const geistMono = localFont({
 // Create a context
 const SearchContext = createContext({
   searchText: "",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setSearchText: (text: string) => {},
 });
 

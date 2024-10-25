@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getArtistDetails, getPlaylists, getTopArtists, getUserInfo } from "./hooks";
+import { getPlaylists, getUserInfo } from "./hooks";
 import getToken from "../utils/token";
 import TopArtists from "../components/TopArtists";
 
 const UserProfile: React.FC = () => {
   const [selectedPlaylistId, setSelectedPlalistId] = useState<string>(); // ID de la playlist
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null); // Estado para la información del usuario // Estado para el manejo de errores
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [playlists, setPlaylists] = useState<any[]>([]);
-  
 
   // Efecto para cargar la información del usuario y los top artistas cuando se monta el componente
   useEffect(() => {
@@ -29,11 +30,9 @@ const UserProfile: React.FC = () => {
         const playlists = await getPlaylists(token!);
         setPlaylists(playlists);
         setSelectedPlalistId(playlists[1].id);
-
-      } catch (error) {;
-        throw new Error(
-          "Error al obtener datos de la API de Spotify"
-        );
+      } catch (error) {
+        throw new Error("Error al obtener datos de la API de Spotify");
+        console.error(error);
       }
     }
     fetchData();

@@ -9,15 +9,13 @@ import SearchResults from "./components/SearchResults";
 import { useSearch } from "./layout";
 
 export default function Home() {
+  const { searchText } = useSearch();
 
-  const { searchText, setSearchText } = useSearch();
-
-  const [token, setToken] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
 
   useEffect(() => {
     const getUserData = async () => {
@@ -26,12 +24,11 @@ export default function Home() {
       setIsAuthenticated(isAuthenticated);
       if (!token) {
         setIsLoading(false);
-        return
+        return;
       }
-      setToken(token);
-      
+
       try {
-        const userInfo = await getUserInfo(token!); 
+        const userInfo = await getUserInfo(token!);
         if (userInfo) {
           setUser(userInfo);
         } else {
@@ -44,7 +41,7 @@ export default function Home() {
           "Error desconocido al obtener datos de la API de Spotify";
         setError(errorMessage);
       }
-    }
+    };
     getUserData();
   }, []);
 
@@ -56,22 +53,20 @@ export default function Home() {
         <>
           {!isAuthenticated ? (
             <Login />
-          ) : ( 
+          ) : (
             <>
-              {
-              searchText === "" ? (
+              {searchText === "" ? (
                 <div className="p-4 w-[80%]">
                   <div className="text-2xl mb-2">
                     Welcome {user?.display_name}!{" "}
                   </div>
-                  <TopArtists />
+                  {error ? error : <TopArtists />}
                 </div>
               ) : (
                 <SearchResults searchText={searchText} />
               )}
             </>
-            )
-            }
+          )}
         </>
       )}
     </div>
