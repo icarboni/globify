@@ -1,5 +1,5 @@
 "use client"
-// icons from https://fontawesome.com/search
+
 import { useEffect, useState } from "react";
 import "./style.css"
 import { FaSearch } from "react-icons/fa";
@@ -10,11 +10,6 @@ import Image from "next/image";
 import UserMenu from "./UserMenu";
 import getToken from "@/app/utils/token";
 import { useSearch } from "@/app/layout";
-
-interface NavbarProps {
-  searchText: string;
-  setSearchText: (text: string) => void;
-}
 
 const Navbar = () => {
   
