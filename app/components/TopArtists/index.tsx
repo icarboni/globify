@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 
 const TopArtists = (): JSX.Element => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [topArtists, setTopArtists] = useState<any[]>([]); // Estado para los top artistas
   const [error, setError] = useState<string | null>(null); // Estado para el manejo de errores
 
@@ -18,6 +19,7 @@ const TopArtists = (): JSX.Element => {
 
         // Obtener detalles de cada artista (incluyendo seguidores)
         const artistsWithDetails = await Promise.all(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           artists.map(async (artist: any) => {
             const artistDetails = await getArtistDetails(token, artist.id);
             return {
@@ -27,7 +29,6 @@ const TopArtists = (): JSX.Element => {
           })
         );
         setTopArtists(artistsWithDetails);
-        
       } catch (error) {
         const errorMessage =
           (error as Error).message ||
@@ -37,7 +38,7 @@ const TopArtists = (): JSX.Element => {
     }
     fetchData();
   }, []);
-  
+
   return (
     <div className="bg-slate-600 p-6">
       <h2 className="text-xl font-bold mb-4">Mis Top Artistas del Mes</h2>
